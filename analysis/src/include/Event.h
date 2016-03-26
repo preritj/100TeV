@@ -28,12 +28,9 @@ public:
   Event(ExRootTreeReader *);
   void Reset(), next(), GetMETjetInfo(), GetIsoLepInfo();
   void GetCAjetInfo();
-  inline double HT(), MET();
   inline EventOutput Output();
 };
 
-inline double Event::MET(){return event.MET;}
-inline double Event::HT(){return event.HT;}
 inline EventOutput Event::Output(){return event;}
 
 }

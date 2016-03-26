@@ -16,19 +16,16 @@ private:
   Long64_t entry=0;
   ExRootTreeReader *treeReader;
   TClonesArray *branchCAJet;
-  TClonesArray *branchTrack, *branchTower, *branchEFlowMuon;
-  EventOutput event; 
+  TClonesArray *branchTrack, *branchTower;
+  TClonesArray *branchEFlowMuon, *branchParticle;
+  JetSubOutput jsub; 
 public:
-  Event(ExRootTreeReader *);
-  void Reset(), next(), GetMETjetInfo(), GetIsoLepInfo();
-  void GetCAjetInfo();
-  inline double HT(), MET();
-  inline EventOutput Output();
+  JetSub(ExRootTreeReader *);
+  void Reset(), next();
+  inline JetSubOutput Output();
 };
 
-inline double Event::MET(){return event.MET;}
-inline double Event::HT(){return event.HT;}
-inline EventOutput Event::Output(){return event;}
+inline JetSubOutput JetSub::Output(){return jsub;}
 
 }
 #endif // JETSUBSTRUCT_H

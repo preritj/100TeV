@@ -7,10 +7,9 @@ Event::Event(ExRootTreeReader *t_Reader){
   entry =0; /// event index 
   treeReader = t_Reader;
   branchJet        = treeReader->UseBranch("Jet");
-  //branchGenJet     = treeReader->UseBranch("GenJet");
+  branchCAJet        = treeReader->UseBranch("CAJet");
   branchIsoEl        = treeReader->UseBranch("Electron");
   branchIsoMuon      = treeReader->UseBranch("Muon");
-  //branchPhoton     = treeReader->UseBranch("Photon");
   branchMET          = treeReader->UseBranch("MissingET");
   //branchParticle   = treeReader->UseBranch("Particle");
 }
