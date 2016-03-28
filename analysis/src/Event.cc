@@ -7,7 +7,7 @@ Event::Event(ExRootTreeReader *t_Reader){
   entry =0; /// event index 
   treeReader = t_Reader;
   branchJet        = treeReader->UseBranch("Jet");
-  branchCAJet        = treeReader->UseBranch("CAJet");
+  //branchCAJet        = treeReader->UseBranch("CAJet");
   branchIsoEl        = treeReader->UseBranch("Electron");
   branchIsoMuon      = treeReader->UseBranch("Muon");
   branchMET          = treeReader->UseBranch("MissingET");
@@ -20,14 +20,13 @@ void Event::next(){
   Reset();
   GetMETjetInfo();
   GetIsoLepInfo();
-  GetCAjetInfo();
 }
 
 void Event::Reset(){
   event.MET=0.; event.HT=0.;
   event.Jet_Pt.clear();
-  event.CAJet_Pt.clear();
-  event.CAJet_Mass.clear();
+  //event.CAJet_Pt.clear();
+  //event.CAJet_Mass.clear();
   event.Jet_MET_DeltaR.clear();
   event.IsoEl_Pt.clear();
   event.IsoMu_Pt.clear();
@@ -82,18 +81,5 @@ void Event::GetIsoLepInfo(){
   }
 }
 
-void Event::GetCAjetInfo(){
-  if(branchCAJet){
-	Int_t nJets = branchCAJet->GetEntriesFast();
-	for (Int_t i=0; i< nJets; i++){
-      Jet *jet = (Jet*) branchCAJet->At(i); 
-	  double JetPT = jet->PT;
-	  if (JetPT < 500. || std::abs(jet->Eta) > 2.5) continue;
-	  event.Jet_Pt.push_back(JetPT);
-	  event.CAJet_Mass.push_back(jet->Mass);
-    }
-  }
-}
-  
 //=======================================================
 } /// namespace analysis

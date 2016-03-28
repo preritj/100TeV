@@ -8,7 +8,7 @@
 #include "ExRootAnalysis/ExRootConfReader.h"
 #include "ExRootAnalysis/ExRootResult.h"
 
-//#include "fastjet/PseudoJet.hh"
-//#include "fastjet/ClusterSequence.hh"
+#include "fastjet/PseudoJet.hh"
+#include "fastjet/ClusterSequence.hh"
 
 #endif

@@ -19,8 +19,10 @@ Analysis::Analysis(ExRootTreeReader *t_Reader, std::string OutputFile){
   eventTree->Branch("Jet_MET_DeltaR", &eventOut.Jet_MET_DeltaR); 
   eventTree->Branch("IsoEl_Pt", &eventOut.IsoEl_Pt); 
   eventTree->Branch("IsoMu_Pt", &eventOut.IsoMu_Pt); 
-  eventTree->Branch("CAJet_Pt", &eventOut.CAJet_Pt); 
-  eventTree->Branch("CAJet_Mass", &eventOut.CAJet_Mass); 
+  eventTree->Branch("CAJet_Pt", &eventJSOut.CAJet_Pt); 
+  eventTree->Branch("CAJet_Mass", &eventJSOut.CAJet_Mass); 
+  eventTree->Branch("FHTop_Pt", &eventJSOut.FHTop_Pt); 
+  eventTree->Branch("FHTop_Mass", &eventJSOut.FHTop_Mass); 
 
   /// initialize analysis
   treeReader = t_Reader;
@@ -29,9 +31,12 @@ Analysis::Analysis(ExRootTreeReader *t_Reader, std::string OutputFile){
 
 void Analysis::RunEvents(){
   Event ev(treeReader);
+  JetSub js(treeReader);
   for (Long64_t i=0; i < nEvents; i++){
 	ev.next();
+    js.next();
     eventOut = ev.Output();
+    eventJSOut = js.Output();
     eventTree->Fill(); 
   }
 }

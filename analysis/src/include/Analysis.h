@@ -3,6 +3,7 @@
 #include "RootHeaders.h"
 #include "DelphesHeaders.h"
 #include "Event.h"
+#include "JetSub.h"
 namespace analysis{
 //========================================================
 
@@ -13,6 +14,7 @@ private:
   TTree *eventTree;
   TFile *file;
   EventOutput eventOut;
+  JetSubOutput eventJSOut;
 public:
   Analysis(ExRootTreeReader *, std::string);
   void RunEvents(), Write();
