@@ -23,7 +23,7 @@ void JetSub::next(){
 	  std::vector <fastjet::PseudoJet> JetConsts; JetConsts.clear();
 	  DelphesToFastjet(jet, JetConsts);
 	  std::vector <PFlowJet> PF; PF.clear();
-	  double Rtop = 700./jet->PT;
+	  double Rtop = 600./jet->PT;
 	  ReCluster(JetConsts, PF, Rtop);
 	  for (unsigned long j=0; j < PF.size(); j++){
 		if (PF[j].MuonInJet()) {
@@ -31,6 +31,7 @@ void JetSub::next(){
 		else {
 		  eventJS.FHTop_Pt.push_back(PF[j].pT()); 
 		  eventJS.FHTop_Mass.push_back(PF[j].JetMass()); 
+		  eventJS.FHTop_Tau32.push_back(PF[j].tau32()); 
 		}
 	  }
 	}
@@ -43,6 +44,7 @@ void JetSub::Reset(){
   eventJS.CAJet_Mass.clear();
   eventJS.FHTop_Pt.clear();
   eventJS.FHTop_Mass.clear();
+  eventJS.FHTop_Tau32.clear();
 }
 
 //void JetSub::GetTopInfo(){

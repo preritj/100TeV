@@ -20,12 +20,13 @@ class PFlowJet
 {
 private:
   std::vector <fastjet::PseudoJet> PFjetConsts;
+  std::vector <fastjet::PseudoJet> tracks;
   PFlowJetP4  jetP4;
 public:
   PFlowJet(const std::vector<fastjet::PseudoJet> &);
   void calcJetP4();
   bool MuonInJet();
-  double pT(), JetMass();
+  double pT(), JetMass(), tau32();
 };
 
 

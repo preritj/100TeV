@@ -23,6 +23,7 @@ Analysis::Analysis(ExRootTreeReader *t_Reader, std::string OutputFile){
   eventTree->Branch("CAJet_Mass", &eventJSOut.CAJet_Mass); 
   eventTree->Branch("FHTop_Pt", &eventJSOut.FHTop_Pt); 
   eventTree->Branch("FHTop_Mass", &eventJSOut.FHTop_Mass); 
+  eventTree->Branch("FHTop_Tau32", &eventJSOut.FHTop_Tau32); 
 
   /// initialize analysis
   treeReader = t_Reader;

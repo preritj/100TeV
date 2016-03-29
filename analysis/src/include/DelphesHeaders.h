@@ -10,5 +10,6 @@
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"
+#include "fastjet/contribs/Nsubjettiness/Nsubjettiness.hh"
 
 #endif
