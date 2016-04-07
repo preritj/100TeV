@@ -3,15 +3,14 @@ namespace analysis{
 //=======================================================
 
 
-Event::Event(ExRootTreeReader *t_Reader){
+Event::Event(ExRootTreeReader *t_Reader) {
   entry =0; /// event index 
   treeReader = t_Reader;
   branchJet        = treeReader->UseBranch("Jet");
-  //branchCAJet        = treeReader->UseBranch("CAJet");
   branchIsoEl        = treeReader->UseBranch("Electron");
   branchIsoMuon      = treeReader->UseBranch("Muon");
   branchMET          = treeReader->UseBranch("MissingET");
-  //branchParticle   = treeReader->UseBranch("Particle");
+  branchEvent        = treeReader->UseBranch("Event");
 }
 
 void Event::next(){
@@ -19,17 +18,28 @@ void Event::next(){
   treeReader->ReadEntry(entry++);
   Reset();
   GetMETjetInfo();
+  if (veto) return;
   GetIsoLepInfo();
 }
 
 void Event::Reset(){
+  veto = false;
   event.MET=0.; event.HT=0.;
   event.Jet_Pt.clear();
-  //event.CAJet_Pt.clear();
-  //event.CAJet_Mass.clear();
+  event.Jet_Mass.clear();
   event.Jet_MET_DeltaR.clear();
   event.IsoEl_Pt.clear();
   event.IsoMu_Pt.clear();
+}
+
+double Event::GetEventWeight(){
+  // Store weights for the event
+  double weight=1.;
+  if (branchEvent){
+    LHEFEvent* LHEFev = (LHEFEvent*) branchEvent->At(0);
+    weight = LHEFev->Weight;
+  }
+  return weight;
 }
 
 void Event::GetMETjetInfo(){
@@ -49,16 +59,21 @@ void Event::GetMETjetInfo(){
 	  double JetPT = jet->PT;
 	  if (JetPT < 200. || std::abs(jet->Eta) > 2.5) continue;
 	  event.Jet_Pt.push_back(JetPT);
+	  event.Jet_Mass.push_back(jet->Mass);
 	  double deltaR = -1.;
 	  if (IsMET) {
         met = (MissingET*) branchMET->At(0);
-		deltaR=jet->P4().DeltaR(met->P4());
+		TLorentzVector metP4;
+		metP4.SetPxPyPzE(met->MET*cos(met->Phi),
+						 met->MET*sin(met->Phi), 0., 0.);
+		deltaR=jet->P4().DeltaPhi(metP4);
       }
 	  event.Jet_MET_DeltaR.push_back(deltaR);
 	  ScalarHT += JetPT;
 	}
 	event.HT = ScalarHT;
   } 
+  if (event.MET < 200. || event.HT < 2000.) veto=true;
 }
 
 void Event::GetIsoLepInfo(){

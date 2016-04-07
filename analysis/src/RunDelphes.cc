@@ -20,11 +20,12 @@
 
 int main(int argc, char *argv[])
 {
-  if(argc != 3)
+  if(argc != 4)
   {
-	std::cout << "Usage : RunDelphes <input_file> <output_file>" << std::endl;    		
+	std::cout << "Usage : RunDelphes <input_file> <output_file> <flag:event_wt>" << std::endl;    		
 	std::cout << "<input_file>  : root file with all the events" << std::endl;    		
 	std::cout << "<output_file> : root file after analysis is run" << std::endl;  
+	std::cout << "<flag:event_wt> : 1 to use event weight, 0 otherwise" << std::endl;  
     return EXIT_FAILURE; 
   } 
 
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
   /// get filenames		
   const std::string InputFile = argv[1];
   const std::string OutputFile = argv[2];
+  int UseEventWeight = atoi(argv[3]);
 
 
   /// Create chain of root trees
@@ -43,7 +45,7 @@ int main(int argc, char *argv[])
   ExRootTreeReader *treeReader = new ExRootTreeReader(&chain);
 
   /// create object for analysis
-  analysis::Analysis *an = new analysis::Analysis(treeReader, OutputFile);
+  analysis::Analysis *an = new analysis::Analysis(treeReader, OutputFile, UseEventWeight);
 
   /// run analysis
   an->RunEvents();

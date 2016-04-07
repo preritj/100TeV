@@ -16,6 +16,14 @@ JetSub::JetSub(ExRootTreeReader *t_Reader){
 void JetSub::next(){
   Reset();
   GetCAjetInfo();
+/// test
+//  if (branchParticle){
+//    for (Int_t i=0; i < branchParticle->GetEntriesFast(); i++){
+//  	  GenParticle *particle = (GenParticle*) branchParticle->At(i);
+//	  if (particle->Status == 3 && (particle->PID == 13 || particle->PID == 15)) return; 
+//	}
+//  }
+/// end test
   if (branchCAJet){
     Int_t nJets = branchCAJet->GetEntriesFast();
     for (Int_t i=0; i < nJets; i++){
@@ -23,28 +31,31 @@ void JetSub::next(){
 	  std::vector <fastjet::PseudoJet> JetConsts; JetConsts.clear();
 	  DelphesToFastjet(jet, JetConsts);
 	  std::vector <PFlowJet> PF; PF.clear();
-	  double Rtop = 600./jet->PT;
+	  double Rtop = 1000./jet->PT;
 	  ReCluster(JetConsts, PF, Rtop);
 	  for (unsigned long j=0; j < PF.size(); j++){
-		if (PF[j].MuonInJet()) {
-		}
-		else {
-		  eventJS.FHTop_Pt.push_back(PF[j].pT()); 
-		  eventJS.FHTop_Mass.push_back(PF[j].JetMass()); 
-		  eventJS.FHTop_Tau32.push_back(PF[j].tau32()); 
-		}
+		eventJS.Top_zMu.push_back(PF[j].zMu());
+		eventJS.Top_MiniIso.push_back(PF[j].miniIso());
+		eventJS.Top_DeltaR_bMu.push_back(PF[j].DeltaR_bMu());
+		eventJS.Top_Pt.push_back(PF[j].pT()); 
+		eventJS.Top_Mass.push_back(PF[j].JetMass()); 
+		eventJS.Top_Tau32.push_back(PF[j].tau32()); 
+		eventJS.Top_RatioTrk.push_back(PF[j].RatioTrk()); 
 	  }
 	}
   }
-  //();
 }
 
 void JetSub::Reset(){
   eventJS.CAJet_Pt.clear();
   eventJS.CAJet_Mass.clear();
-  eventJS.FHTop_Pt.clear();
-  eventJS.FHTop_Mass.clear();
-  eventJS.FHTop_Tau32.clear();
+  eventJS.Top_Pt.clear();
+  eventJS.Top_Mass.clear();
+  eventJS.Top_zMu.clear();
+  eventJS.Top_Tau32.clear();
+  eventJS.Top_MiniIso.clear();
+  eventJS.Top_DeltaR_bMu.clear();
+  eventJS.Top_RatioTrk.clear();
 }
 
 //void JetSub::GetTopInfo(){
@@ -127,8 +138,17 @@ void JetSub::ReCluster(const std::vector<fastjet::PseudoJet> & inputJet,
 	incl_jets = sorted_by_pt(clust_seq.inclusive_jets(pTmin));
 	for (unsigned long i=0; i < incl_jets.size(); i++){
 	  std::vector<fastjet::PseudoJet> JetConsts; JetConsts.clear();
+	  std::vector<fastjet::PseudoJet> TopConsts; TopConsts.clear();
 	  JetConsts = incl_jets[i].constituents();
-	  PFlowJet PFJet(JetConsts);
+	  double Rtop = 600./incl_jets[i].pt();
+	  fastjet::JetDefinition jet_def_top(fastjet::antikt_algorithm, Rtop,
+									fastjet::WTA_pt_scheme);
+	  fastjet::ClusterSequence clust_seq_top(JetConsts, jet_def_top);
+	  std::vector <fastjet::PseudoJet> top_incl_jets;
+	  top_incl_jets = sorted_by_pt(clust_seq_top.inclusive_jets(pTmin));
+	  if (top_incl_jets.empty()) continue;
+	  TopConsts = top_incl_jets[0].constituents();
+	  PFlowJet PFJet(TopConsts);
 	  reclus_jets.push_back(PFJet);
 	}
 }

@@ -7,6 +7,7 @@
 #include "ExRootAnalysis/ExRootTreeReader.h"
 #include "ExRootAnalysis/ExRootConfReader.h"
 #include "ExRootAnalysis/ExRootResult.h"
+#include "ExRootAnalysis/ExRootTreeBranch.h"
 
 #include "fastjet/PseudoJet.hh"
 #include "fastjet/ClusterSequence.hh"

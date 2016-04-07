@@ -9,9 +9,13 @@ namespace analysis{
 struct JetSubOutput{
   std::vector<double> CAJet_Pt; 	
   std::vector<double> CAJet_Mass; 	
-  std::vector<double> FHTop_Pt; 	
-  std::vector<double> FHTop_Mass; 	
-  std::vector<double> FHTop_Tau32; 	 
+  std::vector<double> Top_Pt; 	
+  std::vector<double> Top_Mass; 	
+  std::vector<double> Top_Tau32; 	 
+  std::vector<double> Top_zMu; 	 
+  std::vector<double> Top_DeltaR_bMu; 	 
+  std::vector<double> Top_MiniIso; 	 
+  std::vector<double> Top_RatioTrk; 	 
 };
 
 class JetSub

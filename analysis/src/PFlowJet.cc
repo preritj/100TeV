@@ -35,6 +35,7 @@ void  PFlowJet::calcJetP4(){
 		    tracks.push_back(PFjetConsts[i]);
 			if (pJet.pt() > (p.muon).Pt()) p.muon = pConst;
 		}
+		else p.other += pConst;
 	}
 	jetP4 = p;
 }
@@ -67,7 +68,10 @@ double PFlowJet::pT(){
 /// for jets with pT > 1 TeV, only track info is used
 double PFlowJet::tau32(){
   double jetPT = pT(); 
-  double R = 1.5; // include everything 
+  /// N-subjettiness only takes jet as input, so we have to form 
+  /// a jet from the constituents ensuring all the constituents 
+  /// are in the jet. Trick is to choose kT algorithm and large R 
+  double R = 100.; 
   fastjet::JetDefinition jetdef = 
 				fastjet::JetDefinition(fastjet::antikt_algorithm, R);
   std::vector <fastjet::PseudoJet> input; input.clear();
@@ -78,12 +82,55 @@ double PFlowJet::tau32(){
   std::vector<fastjet::PseudoJet> incl_jets  
 						= sorted_by_pt(clust_seq.inclusive_jets());
   if (incl_jets.empty()) return -1.;
-  double beta = 2.7;
+  double beta = 1.0;
   fastjet::contrib::NsubjettinessRatio nSub32(3,2, 
-							fastjet::contrib::OnePass_WTA_KT_Axes(), 
+							fastjet::contrib::WTA_KT_Axes(), 
 							fastjet::contrib::UnnormalizedMeasure(beta));
   return nSub32(incl_jets[0]);
 }
 
+
+// calculate pT fraction of the jet carried by muon 
+double PFlowJet::zMu(){
+  if (!MuonInJet()) return -1.;
+  //return (jetP4.muon).Pt()/(jetP4.track).Pt(); 
+  //return (jetP4.track - jetP4.muon).Pt(); 
+  return (jetP4.muon).Pt()/(jetP4.track + jetP4.tower).Pt(); 
+}
+
+
+// calculate mini-isolation for tagging top with muon
+double PFlowJet::miniIso(){
+  if (!MuonInJet()) return -1.;
+  double pTmu = (jetP4.muon).Pt();
+  double Riso = 20./pTmu;
+  double pTcone = 0.;
+  TLorentzVector pConst;
+  for (unsigned long i=0; i < PFjetConsts.size(); i++){
+	fastjet::PseudoJet pJet = PFjetConsts[i];
+	pConst.SetPxPyPzE(pJet.px(), pJet.py(), pJet.pz(), pJet.e());
+	double pTj = pJet.pt();
+	//if (pTj>1. && (pJet.user_index() == 0 || pJet.user_index() == 2))
+	if (pTj>5. && (pJet.user_index() == 0 || pJet.user_index() == 2))
+	  if ( pConst.DeltaR(jetP4.muon) < Riso) pTcone += pTj;
+  }
+  return pTmu/pTcone;
+}
+
+// calculate DeltaR between b-jet candidate and muon
+double PFlowJet::DeltaR_bMu(){
+  if (!MuonInJet()) return -1.;
+  double jetPT = pT(); 
+  TLorentzVector bJetP4 = jetP4.track - jetP4.muon;
+  //if (jetPT < 1000.) 
+  	bJetP4 = bJetP4 + jetP4.tower;
+  return (jetP4.muon).DeltaR(bJetP4);
+}
+
+
+// calculate the fraction of energy carried by charged tracks
+double PFlowJet::RatioTrk(){
+	return (jetP4.track).E()/((jetP4.track).E()+(jetP4.tower).E());
+}
 
 } // end namespace analysis

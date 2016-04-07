@@ -8,11 +8,12 @@ namespace analysis{
 
 
 struct PFlowJetP4{
-	TLorentzVector track, tower, muon;
+	TLorentzVector track, tower, muon, other;
 	PFlowJetP4(){
     	track.SetPxPyPzE(0.0, 0.0, 0.0, 0.0);
     	tower.SetPxPyPzE(0.0, 0.0, 0.0, 0.0);
     	muon.SetPxPyPzE(0.0, 0.0, 0.0, 0.0);
+    	other.SetPxPyPzE(0.0, 0.0, 0.0, 0.0);
 	}
 };
 
@@ -26,7 +27,8 @@ public:
   PFlowJet(const std::vector<fastjet::PseudoJet> &);
   void calcJetP4();
   bool MuonInJet();
-  double pT(), JetMass(), tau32();
+  double pT(), JetMass(), tau32(), RatioTrk();
+  double zMu(),  miniIso(), DeltaR_bMu();
 };
 
 
