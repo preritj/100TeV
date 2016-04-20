@@ -36,8 +36,13 @@ tar -zxvf Delphes-3.3.2.tar.gz
 module load root/5.34
 ``` 
 
-* Last step is to install Delphes. Go inside the Delphes directory and do :
+* Now install Delphes. Go inside the Delphes directory and do :
 ```
 ./configure
 make
 ```
+
+* One last step, we have to make Madgraph aware of the Delphes path. Open the file `input/mg5_configuration.txt`. Then, uncomment and edit the following line 
+```
+delphes_path = <your Delphes directory>
+``` 
