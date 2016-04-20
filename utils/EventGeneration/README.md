@@ -42,7 +42,7 @@ module load root/5.34
 make
 ```
 
-* One last step, we have to make Madgraph aware of the Delphes path. Open the file `input/mg5_configuration.txt`. Then, uncomment and edit the following line 
+* One last step, we have to make Madgraph aware of the Delphes path. Open the file `input/mg5_configuration.txt` in the Madgraph directory. Then, uncomment and edit the following line 
 ```
 delphes_path = <your Delphes directory>
 ``` 
