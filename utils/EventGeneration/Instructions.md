@@ -15,7 +15,7 @@ tar -zxvf MG5_aMC_v2.3.3.tar.gz
 ```
 
 ### Installing Pythia 6 :
-* If the above step works, install Pythia 6 inside Madgraph by issuing the following command at Madgraph prompt
+* If the above step works, install Pythia 6 inside Madgraph by issuing the following command at *Madgraph prompt* (i.e. after running the above command)
 ```
 install pythia-pgs
 ```
