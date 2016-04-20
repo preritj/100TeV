@@ -19,7 +19,7 @@ quit
 ```
 
 ### Installing Pythia 6 :
-* If the above step works, install Pythia 6 inside Madgraph by issuing the following command at *Madgraph prompt* (i.e. after running the above command)
+* If the above step works, install Pythia 6 inside Madgraph by issuing the following command at *Madgraph prompt* (i.e. after running `./bin/mg5_aMC` )
 ```
 install pythia-pgs
 ```
