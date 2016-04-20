@@ -27,7 +27,7 @@ wget http://cp3.irmp.ucl.ac.be/downloads/Delphes-3.3.2.tar.gz
 tar -zxvf Delphes-3.3.2.tar.gz
 ```
 
-* Delphes requires root, which is installed in the cluster *but* it has to be loaded. To load root, do :
+* Delphes requires root, which is installed in the cluster *but* it has to be loaded. To load root, use the following command in terminal :
 ```
 module load root/5.34
 ``` 
